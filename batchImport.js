@@ -10,7 +10,6 @@ const options = {
 };
 
 const greetings = JSON.parse(fs.readFileSync("data/greetings.json"));
-console.log(greetings);
 const batchImport = async (data) => {
   const client = await MongoClient(MONGO_URI, options);
 
