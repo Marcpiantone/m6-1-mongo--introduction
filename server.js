@@ -17,6 +17,20 @@ express()
 
   // exercise 1
 
+  // .get("/exercise-1/users", async (req, res) => {
+  //   const users = await getUsers();
+
+  //   if (users !== []) {
+  //     res.status(200).json(users);
+  //   } else {
+  //     res.status(404).json("Couldn't find any user, 404");
+  //   }
+  // })
+
+  .get("/exercise-1/users", getUsers)
+
+  .post("/exercise-1/users", addUser)
+
   // exercise 2
 
   // handle 404s
