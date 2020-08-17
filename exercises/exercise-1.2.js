@@ -20,6 +20,4 @@ const getCollection = async (dbName, collection) => {
   return data;
 };
 
-const users = getCollection("exercise_1", "users").then((data) =>
-  console.log(data)
-);
+getCollection("exercise_1", "users").then((data) => console.log(data));
