@@ -27,6 +27,7 @@ const createGreeting = async (req, res) => {
     res.status(201).json({ status: 201, data: data });
   } catch (err) {
     console.log(err.stack);
+    res.status(500).json({ status: 500, data: req.body, message: err.message });
   }
 
   client.close();
