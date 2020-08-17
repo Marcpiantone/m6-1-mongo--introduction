@@ -19,13 +19,12 @@ const createGreeting = async (req, res) => {
     const db = client.db("exercise_1");
     const collection = db.collection("greetings");
 
-    await collection.insertOne({ newGreeting });
+    const r = await db.collection("greetings").insertOne({ newGreeting });
+    assert.equal(1, r.insertedCount);
 
     const data = await collection.find({ newGreeting }).toArray();
 
-    const greeting = await data;
-
-    res.status(201).json(greeting);
+    res.status(201).json({ status: 201, data: data });
   } catch (err) {
     console.log(err.stack);
   }

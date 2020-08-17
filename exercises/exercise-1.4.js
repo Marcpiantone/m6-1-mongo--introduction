@@ -19,11 +19,9 @@ const addUser = async (req, res) => {
 
   const data = await db.collection("users").find({ newUser }).toArray();
 
-  const user = await data;
-
   client.close();
 
-  res.status(201).json(user);
+  res.status(201).json(data);
 };
 
 module.exports = { addUser };
