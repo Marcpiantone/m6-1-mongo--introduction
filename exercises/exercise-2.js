@@ -19,7 +19,7 @@ const createGreeting = async (req, res) => {
     const db = client.db("exercise_1");
     const collection = db.collection("greetings");
 
-    const r = await db.collection("greetings").insertOne({ newGreeting });
+    const r = await collection.insertOne({ newGreeting });
     assert.equal(1, r.insertedCount);
 
     const data = await collection.find({ newGreeting }).toArray();
