@@ -112,7 +112,7 @@ const updateGreeting = async (req, res) => {
   const query = { _id };
 
   const { hello } = req.body;
-  const newValues = { $set: { ...req.body } };
+  const newValues = { $set: { hello } };
   console.log(hello);
 
   if (!hello) {
