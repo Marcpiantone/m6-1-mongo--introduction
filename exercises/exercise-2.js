@@ -93,7 +93,7 @@ const deleteGreeting = async (req, res) => {
     await client.connect();
     const db = client.db("exercise_1");
 
-    await db.collection("greetings").deleteOne({ _id }, (result) => {
+    await db.collection("greetings").deleteOne({ _id }, (err, result) => {
       assert.equal(1, result.deletedCount);
       res
         .status(204)
