@@ -88,22 +88,61 @@ const getGreetings = async (req, res) => {
 const deleteGreeting = async (req, res) => {
   const _id = req.params._id.toUpperCase();
 
-  console.log(_id);
   const client = await MongoClient(MONGO_URI, options);
+  try {
+    await client.connect();
+    const db = client.db("exercise_1");
 
+    await db.collection("greetings").deleteOne({ _id }, (result) => {
+      assert.equal(1, result.deletedCount);
+      res
+        .status(204)
+        .json({ status: 204, _id, data: "Entry succesfully deleted" });
+    });
+  } catch (err) {
+    res.status(500).json({ status: 500, _id, data: err.message });
+  }
+
+  client.close();
+};
+
+const updateGreeting = async (req, res) => {
+  const _id = req.params._id;
+
+  const query = { _id };
+
+  const { hello } = req.body;
+  const newValues = { $set: { ...req.body } };
+  console.log(hello);
+
+  if (!hello) {
+    res.status(400).json({
+      status: 400,
+      data: req.body,
+      message: "You haven't any Hello to update here!",
+    });
+    return;
+  }
+
+  const client = await MongoClient(MONGO_URI, options);
   await client.connect();
   const db = client.db("exercise_1");
 
-  await db.collection("greetings").deleteOne({ _id }, (err, result) => {
-    if (result && result.deletedCount === 1) {
-      res
-        .status(200)
-        .json({ status: 204, _id, data: "Entry succesfully deleted" });
-    } else {
-      res.status(404).json({ status: 404, _id, data: "Not Found" });
-    }
-
-    client.close();
-  });
+  try {
+    const r = await db.collection("greetings").updateOne(query, newValues);
+    assert.equal(1, r.matchedCount);
+    assert.equal(1, r.modifiedCount);
+    res.status(200).json({ status: 200, _id, ...req.body });
+  } catch (err) {
+    res.status(500).json({ status: 500, _id, data: err.message });
+  }
+  client.close();
 };
-module.exports = { createGreeting, getGreeting, getGreetings, deleteGreeting };
+
+module.exports = {
+  createGreeting,
+  getGreeting,
+  getGreetings,
+  deleteGreeting,
+  updateGreeting,
+};
