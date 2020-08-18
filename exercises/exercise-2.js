@@ -34,7 +34,7 @@ const createGreeting = async (req, res) => {
 };
 
 const getGreeting = async (req, res) => {
-  const _id = req.params._id;
+  const _id = req.params._id.toUpperCase();
   const client = await MongoClient(MONGO_URI, options);
 
   await client.connect();
@@ -69,14 +69,12 @@ const getGreetings = async (req, res) => {
         const actualStart = start ? start : 0;
         const actualEnd = limit ? actualStart + limit : result.length;
         const data = result.slice(actualStart, actualEnd);
-        res
-          .status(200)
-          .json({
-            status: 200,
-            start: actualStart,
-            limit: actualEnd,
-            data: data,
-          });
+        res.status(200).json({
+          status: 200,
+          start: actualStart,
+          limit: actualEnd,
+          data: data,
+        });
       } else {
         res.status(404).json({
           status: 404,
@@ -87,4 +85,25 @@ const getGreetings = async (req, res) => {
     });
 };
 
-module.exports = { createGreeting, getGreeting, getGreetings };
+const deleteGreeting = async (req, res) => {
+  const _id = req.params._id.toUpperCase();
+
+  console.log(_id);
+  const client = await MongoClient(MONGO_URI, options);
+
+  await client.connect();
+  const db = client.db("exercise_1");
+
+  await db.collection("greetings").deleteOne({ _id }, (err, result) => {
+    if (result && result.deletedCount === 1) {
+      res
+        .status(200)
+        .json({ status: 204, _id, data: "Entry succesfully deleted" });
+    } else {
+      res.status(404).json({ status: 404, _id, data: "Not Found" });
+    }
+
+    client.close();
+  });
+};
+module.exports = { createGreeting, getGreeting, getGreetings, deleteGreeting };
